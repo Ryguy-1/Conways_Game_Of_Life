@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -49,7 +50,37 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 	
 	public void launchGame() {
 		//build the window and start the simulation
-		
+		window = new JFrame();
+		inputPanel = new JPanel();
+		startStopButton = new JButton();
+		randomizeButton = new JButton();
+		clearButton = new JButton();
+		speedLabel = new JLabel();
+		speedLabel.setText("Delay: ");
+		speedField = new JTextField();
+		gamePanel = new WorldPanel(WIDTH, HEIGHT, CELLS_PER_ROW);
+		window.add(inputPanel);
+		inputPanel.add(gamePanel);
+		gamePanel.setVisible(true);
+		window.setVisible(true);
+		inputPanel.setVisible(true);
+		inputPanel.add(speedField);
+		inputPanel.add(speedLabel);
+		speedField.setText("60");
+		speedLabel.setVisible(true);
+		speedField.setVisible(true);
+		inputPanel.add(startStopButton);
+		startStopButton.setVisible(true);
+		startStopButton.setText("Start/Stop");
+		inputPanel.add(randomizeButton);
+		randomizeButton.setVisible(true);
+		randomizeButton.setText("Randomize");
+		inputPanel.add(clearButton);
+		clearButton.setVisible(true);
+		clearButton.setText("Clear");
+		window.pack();
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
 	
 	@Override
@@ -65,4 +96,4 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 			//call clearCells
 	}
 	}
-}
+
