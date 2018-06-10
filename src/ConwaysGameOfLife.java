@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,6 +35,7 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 	public static final int CELLS_PER_ROW = 350;
 	
 	private boolean isRunning = false;
+
 	
 	private JFrame window;
 	private JPanel inputPanel;
@@ -48,13 +51,17 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 		new ConwaysGameOfLife().launchGame();
 	}
 	
+	
 	public void launchGame() {
 		//build the window and start the simulation
 		window = new JFrame();
 		inputPanel = new JPanel();
 		startStopButton = new JButton();
+		startStopButton.addActionListener(this);
 		randomizeButton = new JButton();
+		randomizeButton.addActionListener(this);
 		clearButton = new JButton();
+		clearButton.addActionListener(this);
 		speedLabel = new JLabel();
 		speedLabel.setText("Delay: ");
 		speedField = new JTextField();
@@ -88,12 +95,21 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 		//if startStopButton is pressed, 
 			// toggle isRunning to the opposite of its current state
 			// start or stop the animation based on the state of isRunning
-		
+		if(e.getSource() == startStopButton){
+			if(isRunning==true) {
+				isRunning = false;
+			}else {
+				isRunning = true;
+			}
+		}else if(e.getSource() == randomizeButton) {
+			gamePanel.randomizeCells();
 		// if ranomizeButton is pressed
 			// call randomizeCells
-		
+		}else if(e.getSource()==clearButton) {
+			gamePanel.clearCells();
 		// if clearButton is pressed
 			//call clearCells
+	}
 	}
 	}
 
