@@ -10,6 +10,8 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 public class WorldPanel extends JPanel implements MouseListener, ActionListener {
 	private int cellsPerRow;
 	private int cellSize;
@@ -21,16 +23,15 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 		addMouseListener(this);
 		timer = new Timer(500, this);
 		this.cellsPerRow = cpr;
-	
 		//calculate the cellSize
-		cellSize = WIDTH/cpr;
-		
+		cellSize=ConwaysGameOfLife.WIDTH/cpr;
+		System.out.println(cellSize);
 		//initialize the cells array
 		cells = new Cell[cpr][cpr];
 		
 		//initialize each cell in the array
 		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells.length; j++) {
+			for (int j = 0; j < cells[i].length; j++) {
 				cells[i][j]=new Cell(i,j,cellSize);
 			}
 		}
@@ -91,18 +92,28 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	}
 	
 
-		int[][] numLivingNbors;
+
 	public void paintComponent(Graphics g) {
-		//iterate through the cells and draw them
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				if(cells[i][j].isAlive==true) {
+				g.fillRect(cells[i][j].getX()*cellSize, cells[i][j].getY()*cellSize, cellSize, cellSize);
+				}
+			}
+		}
 	}
 	
 	//advances world one step
 	public void step() {
-		//initialize the numLivingNbors variable to be the same si
-		
+		//initialize the numLivingNbors variable to be the same size as the cells
+		int[][] numLivingNbors;
+		numLivingNbors=new int[cellsPerRow][cellsPerRow];
 		//iterate through the cells and populate the numLivingNbors array with their neighbors
-		
-		
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				//numLivingNbors[i][j]=
+			}
+		}
 		repaint();
 	}
 	
@@ -110,7 +121,84 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	//cell identified by x and y
 	public int getLivingNeighbors(int x, int y){
 		int livingNeighbors = 0;
-		
+		if(x==0) {
+			if(cells[x][y].isAlive==true) {
+				livingNeighbors+=1;
+			}
+			else if(cells[x][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}
+		}else if(y==0) {
+			if(cells[x][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}
+		}else if(x==ConwaysGameOfLife.WIDTH) {
+			if(cells[x][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x][y+1].isAlive==true) {
+				livingNeighbors+=1;
+			}
+		}else if(y==ConwaysGameOfLife.HEIGHT) {
+			if(cells[x][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x-1][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y-1].isAlive==true) {
+				livingNeighbors+=1;
+			}else if(cells[x+1][y].isAlive==true) {
+				livingNeighbors+=1;
+			}
+		}else {
+		if(cells[x-1][y-1].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x][y-1].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x+1][y-1].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x-1][y].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x][y].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x+1][y].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x-1][y+1].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x][y+1].isAlive==true) {
+			livingNeighbors+=1;
+		}else if(cells[x+1][y+1].isAlive==true) {
+			livingNeighbors+=1;
+		}
+		}
 		//add 1 to livingNeighbors for each
 		//neighboring cell that is alive
 		
