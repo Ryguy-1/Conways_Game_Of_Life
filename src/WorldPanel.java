@@ -95,10 +95,8 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 
 	public void paintComponent(Graphics g) {
 		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells.length; j++) {
-				if(cells[i][j].isAlive==true) {
-				g.fillRect(cells[i][j].getX()*cellSize, cells[i][j].getY()*cellSize, cellSize, cellSize);
-				}
+			for (int j = 0; j < cells[i].length; j++) {
+				cells[i][j].draw(g);
 			}
 		}
 	}
@@ -111,9 +109,16 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 		//iterate through the cells and populate the numLivingNbors array with their neighbors
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells.length; j++) {
-				//numLivingNbors[i][j]=
+				numLivingNbors[i][j]=getLivingNeighbors(i,j);
 			}
 		}
+		
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				cells[i][j].liveOrDie(numLivingNbors[i][j]);
+			}
+		}
+		
 		repaint();
 	}
 	
@@ -121,84 +126,113 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	//cell identified by x and y
 	public int getLivingNeighbors(int x, int y){
 		int livingNeighbors = 0;
-		if(x==0) {
-			if(cells[x][y].isAlive==true) {
-				livingNeighbors+=1;
-			}
-			else if(cells[x][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}
-		}else if(y==0) {
-			if(cells[x][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}
-		}else if(x==ConwaysGameOfLife.WIDTH) {
-			if(cells[x][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x][y+1].isAlive==true) {
-				livingNeighbors+=1;
-			}
-		}else if(y==ConwaysGameOfLife.HEIGHT) {
-			if(cells[x][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x-1][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y-1].isAlive==true) {
-				livingNeighbors+=1;
-			}else if(cells[x+1][y].isAlive==true) {
-				livingNeighbors+=1;
-			}
-		}else {
-		if(cells[x-1][y-1].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x][y-1].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x+1][y-1].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x-1][y].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x][y].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x+1][y].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x-1][y+1].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x][y+1].isAlive==true) {
-			livingNeighbors+=1;
-		}else if(cells[x+1][y+1].isAlive==true) {
-			livingNeighbors+=1;
+		
+		if(x!=0) {
+			if(cells[x-1][y].isAlive) livingNeighbors+=1;
 		}
+		if(y!=0) {
+			if(cells[x][y-1].isAlive) livingNeighbors+=1;
 		}
+		if(x!=cellsPerRow-1) {
+			if(cells[x+1][y].isAlive) livingNeighbors+=1;
+		}
+		if(y!=cellsPerRow-1) {
+			if(cells[x][y+1].isAlive) livingNeighbors+=1;
+		}
+		if(x!=0 && y!=0) {
+			if(cells[x-1][y-1].isAlive) livingNeighbors+=1;
+		}
+		if(x!=cellsPerRow-1&&y!=0) {
+			if(cells[x+1][y-1].isAlive) livingNeighbors+=1;
+		}
+		if(x!=cellsPerRow-1&&y!=cellsPerRow-1) {
+			if(cells[x+1][y+1].isAlive) livingNeighbors+=1;
+		}
+		if(x!=0&&y!=cellsPerRow-1) {
+			if(cells[x-1][y+1].isAlive) livingNeighbors+=1;
+		}
+		
+		
+//		if(x==0) {
+//			if(cells[x][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}
+//			else if(cells[x][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}
+//		}else if(y==0) {
+//			if(cells[x][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}
+//		}else if(x==ConwaysGameOfLife.WIDTH) {
+//			if(cells[x][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x][y+1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}
+//		}else if(y==ConwaysGameOfLife.HEIGHT) {
+//			if(cells[x][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x-1][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y-1].isAlive==true) {
+//				livingNeighbors+=1;
+//			}else if(cells[x+1][y].isAlive==true) {
+//				livingNeighbors+=1;
+//			}
+//		}else {
+//		if(cells[x-1][y-1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x][y-1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x+1][y-1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x-1][y].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x][y].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x+1][y].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x-1][y+1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x][y+1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}else if(cells[x+1][y+1].isAlive==true) {
+//			livingNeighbors+=1;
+//		}
+//		}
+		
+		
 		//add 1 to livingNeighbors for each
 		//neighboring cell that is alive
 		
@@ -225,8 +259,12 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		//get the location of the mouse
+		int x = e.getX()/(ConwaysGameOfLife.WIDTH/cellsPerRow);
+		int y = e.getY()/(ConwaysGameOfLife.HEIGHT/cellsPerRow);
 		
 		//toggle the cell at that location to either alive or dead
+		if(cells[x][y].isAlive) cells[x][y].isAlive=false;
+		else cells[x][y].isAlive=true;
 		//based on its current state
 		repaint();
 	}
@@ -239,6 +277,8 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("Action Performed");
 		step();		
+		
 	}
 }

@@ -98,8 +98,13 @@ public class ConwaysGameOfLife extends JPanel implements ActionListener{
 		if(e.getSource() == startStopButton){
 			if(isRunning==true) {
 				isRunning = false;
+				gamePanel.stopAnimation();
 			}else {
 				isRunning = true;
+				gamePanel.startAnimation();
+			String x = speedField.getText();
+			int y = Integer.parseInt(x);
+				gamePanel.setAnimationDelay(y);
 			}
 		}else if(e.getSource() == randomizeButton) {
 			gamePanel.randomizeCells();
